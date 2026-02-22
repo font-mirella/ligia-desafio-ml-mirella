@@ -71,3 +71,5 @@ organizado nas seguintes etapas:
 | Random Forest | 0,9658 | ±0,0149 |
 | XGBoost (baseline) | 0,9829 | ±0,0100 |
 | **XGBoost (tuned)** | **0,9872** | **±0,0078** |
+
+**Score público no Kaggle:** 0.98722
