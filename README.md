@@ -1,37 +1,73 @@
-# Desafio Individual - Detecção de Fraudes em Transaçõoes Financeiras com Machine Learning
-**Candidata:** Mirella Fontinelle (mlfm@cin.ufpe.br)
+# Detecção de Fraudes em Transações Financeiras com Machine Learning
 
-**Eixo:** Machine Learning - PS Ligia 2026
+**Candidata:** Mirella Fontinelle (mlfm@cin.ufpe.br)  
+**Eixo:** Machine Learning — PS Ligia 2026
 
-Este repositório contém meu desenvolvimento para o desafio do Processo Seletivo da Liga Acadêmica de Inteligência Artificial (Ligia) do Centro de Informática para o eixo de Machine Learning.
+Este repositório contém o pipeline completo desenvolvido para o Desafio  Individual do Processo Seletivo da Liga Acadêmica de Inteligência Artificial  (Ligia) — CIn/UFPE, eixo de Aprendizado de Máquina.
 
 ## 📂 Organização do Repositório
-O projeto está estruturado da seguinte forma:
-
-* **`notebooks/`**: Contém o arquivo `.ipynb` com todo o pipeline (EDA, Tratamento de Dados, Treinamento e Inferência).
-* **`models/`**: Contém o artefato do modelo final serializado (`.pkl`).
-* **`reports/`**: Contém o relatório técnico em PDF seguindo o padrão IEEE.
-* **`requirements.txt`**: Lista de dependências para garantir a reprodutibilidade do ambiente.
+```
+├── notebooks/
+│   └── desafio_ml.ipynb       # Pipeline completo: EDA, pré-processamento, 
+│                              # treinamento, SHAP e geração da submissão
+├── models/
+│   └── modelo_xgboost.pkl     # Modelo final serializado
+├── reports/
+│   └── relatorio_tecnico.pdf  # Relatório técnico no padrão IEEE
+├── requirements.txt           # Dependências do projeto
+└── README.md
+```
 
 ## 📊 Dados
-Devido ao tamanho dos arquivos, os datasets originais não foram incluídos no repositório. Para reproduzir os resultados:
-1. Baixe os arquivos `train.csv` e `test.csv` da plataforma oficial (Kaggle).
-2. Crie uma pasta chamada `data/` na raiz deste projeto.
-3. Insira os arquivos CSV dentro dessa pasta.
+
+Os datasets não estão incluídos no repositório devido ao tamanho dos arquivos.
+Para reproduzir os resultados:
+
+1. Acesse a competição oficial no Kaggle e baixe `train.csv` e `test.csv`.
+2. Crie uma pasta `data/` na raiz do projeto.
+3. Insira os arquivos CSV dentro de `data/`.
 
 ## 🚀 Como Executar
-1. Instale as dependências necessárias:
-   ```bash
-   pip install -r requirements.txt
-2. O código principal de treinamento e geração das predições está em `notebooks/`. Certifique-se de que o caminho dos dados esteja configurado como `../data/`.
 
-## 🧠 Lógica e Decisões Técnicas
-Baseado na análise detalhada presente no relatório:
+### 1. Instale as dependências
+```bash
+pip install -r requirements.txt
+```
 
-**Análise Exploratória**: Identifiquei forte separabilidade espacial nas variáveis V17, V14 e V12.
+### 2. Configure o caminho dos dados
 
-**Feature Engineering**: Aplicação de escala logarítmica em Amount para reduzir a assimetria e tratamento da variável Time.
+No notebook, certifique-se de que o caminho dos dados aponta para `../data/`.
 
-**Modelo Final**: Utilizei o XGBoost com ajuste de scale_pos_weight para lidar com o desbalanceamento de 0,17%, atingindo uma ROC-AUC média de 0,9872 em validação cruzada.
+### 3. Execute o notebook
 
-**Interpretabilidade (XAI)**: Utilizei SHAP para auditar as previsões e garantir que o modelo não opere como uma "caixa-preta", confirmando que os padrões aprendidos são consistentes com a teoria estatística.
+Abra e execute `notebooks/desafio_ml.ipynb` do início ao fim. O notebook está
+organizado nas seguintes etapas:
+
+- **EDA**: Análise exploratória completa com visualizações
+- **Pré-processamento**: Transformações e preparação do pipeline
+- **Modelagem**: Treinamento e comparação entre Regressão Logística, 
+  Random Forest e XGBoost com validação cruzada estratificada
+- **Interpretabilidade**: Análise SHAP global (Summary Plot) e local 
+  (Waterfall Plot)
+- **Submissão**: Geração automática de `submission_final_ligia.csv` 
+  ao final do notebook
+
+## 🧠 Decisões Técnicas Principais
+
+| Decisão | Justificativa |
+|---|---|
+| ROC-AUC como métrica | Robusta a desbalanceamento; mede capacidade de ordenação de risco |
+| `scale_pos_weight ≈ 577` | Penalização proporcional ao desbalanceamento sem modificar os dados |
+| SMOTE descartado | Risco de data leakage quando aplicado antes da validação cruzada |
+| StratifiedKFold (5 folds) | Preserva proporção de fraudes em cada fold — essencial com 0,17% de positivos |
+| XGBoost com early stopping | Evita sobreajuste; convergência média em ≈559 árvores de um limite de 5000 |
+| SHAP para interpretabilidade | Garante rastreabilidade das decisões; consistente com os coeficientes do modelo linear |
+
+## 📈 Resultados
+
+| Modelo | ROC-AUC (CV) | Desvio Padrão |
+|---|---|---|
+| Regressão Logística | 0,9805 | ±0,0114 |
+| Random Forest | 0,9658 | ±0,0149 |
+| XGBoost (baseline) | 0,9829 | ±0,0100 |
+| **XGBoost (tuned)** | **0,9872** | **±0,0078** |
