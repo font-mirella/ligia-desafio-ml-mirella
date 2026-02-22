@@ -9,12 +9,12 @@ Este repositório contém o pipeline completo desenvolvido para o Desafio  Indiv
 ```
 ├── notebooks/
 │   └── notebook_desafio_ml.ipynb       # Pipeline completo: EDA, pré-processamento, 
-│                              # treinamento, SHAP e geração da submissão
+│                                       # treinamento, SHAP e geração da submissão
 ├── models/
-│   └── modelo_xgboost_ligia.pkl     # Modelo final serializado
+│   └── modelo_xgboost_ligia.pkl        # Modelo final serializado
 ├── reports/
-│   └── relatorio_tecnico.pdf  # Relatório técnico no padrão IEEE
-├── requirements.txt           # Dependências do projeto
+│   └── relatorio_tecnico.pdf           # Relatório técnico no padrão IEEE
+├── requirements.txt                    # Dependências do projeto
 └── README.md
 ```
 
